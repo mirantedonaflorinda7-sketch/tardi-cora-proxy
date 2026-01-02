@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: tardi-cora-proxy
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: CORA_CERT_BASE64
+        sync: false
+      - key: CORA_KEY_BASE64
+        sync: false
+      - key: PROXY_SECRET
+        sync: false
