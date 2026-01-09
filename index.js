@@ -218,6 +218,58 @@ app.get('/businesses/:businessId/balance', authenticate, async (req, res) => {
   }
 });
 
+// Consultar transferência específica (TED/PIX)
+app.get('/transfers/:transferId', authenticate, async (req, res) => {
+  try {
+    const { transferId } = req.params;
+    const authHeader = req.headers['authorization'];
+    const environment = req.headers['x-environment'] || 'stage';
+    const host = environment === 'production' ? CORA_API_PROD : CORA_API_STAGE;
+
+    const response = await makeCoraRequest({
+      hostname: host,
+      port: 443,
+      path: `/transfers/${transferId}`,
+      method: 'GET',
+      headers: {
+        'Authorization': authHeader,
+      },
+    });
+
+    res.status(response.statusCode).send(response.body);
+  } catch (error) {
+    console.error('Transfer status error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Listar transferências
+app.get('/transfers', authenticate, async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const environment = req.headers['x-environment'] || 'stage';
+    const host = environment === 'production' ? CORA_API_PROD : CORA_API_STAGE;
+    
+    const queryParams = new URLSearchParams(req.query).toString();
+    const path = queryParams ? `/transfers?${queryParams}` : '/transfers';
+
+    const response = await makeCoraRequest({
+      hostname: host,
+      port: 443,
+      path,
+      method: 'GET',
+      headers: {
+        'Authorization': authHeader,
+      },
+    });
+
+    res.status(response.statusCode).send(response.body);
+  } catch (error) {
+    console.error('Transfer list error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Consultar extrato
 app.get('/businesses/:businessId/statements', authenticate, async (req, res) => {
   try {
