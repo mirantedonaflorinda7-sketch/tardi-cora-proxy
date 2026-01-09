@@ -219,7 +219,7 @@ app.get('/businesses/:businessId/balance', authenticate, async (req, res) => {
 });
 
 // Consultar transferência específica (TED/PIX)
-app.get('/cora/transfers/:transferId', authenticate, async (req, res) => {
+app.get('/transfers/:transferId', authenticate, async (req, res) => {
   try {
     const { transferId } = req.params;
     const authHeader = req.headers['authorization'];
@@ -244,7 +244,7 @@ app.get('/cora/transfers/:transferId', authenticate, async (req, res) => {
 });
 
 // Listar transferências
-app.get('/cora/transfers', authenticate, async (req, res) => {
+app.get('/transfers', authenticate, async (req, res) => {
   try {
     const authHeader = req.headers['authorization'];
     const environment = req.headers['x-environment'] || 'stage';
